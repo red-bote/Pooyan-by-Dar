@@ -33,7 +33,7 @@ generic (
 );
 port (
   clk : in std_logic;
-  ce : in std_logic := '1'; -- Basys3: single clk_core domain clock enable (write and read)
+  ce : in std_logic := '1'; -- clock enable (write and read)
   we : in std_logic;
   addr : in std_logic_vector((aWidth-1) downto 0);
   d : in std_logic_vector((dWidth-1) downto 0);

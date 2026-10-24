@@ -29,7 +29,7 @@ use ieee.numeric_std.all;
 
 entity pooyan_sound_board is
 port(
-  clk_core     : in std_logic; -- Basys3: single clk_core domain
+  clk_core     : in std_logic;
   ce14         : in std_logic;  -- former clock_14 rising (average 14.318 MHz)
   reset        : in std_logic;
 
