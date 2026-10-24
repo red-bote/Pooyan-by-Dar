@@ -1,0 +1,14 @@
+# pooyan.vhd: vcnt reload 0x0F9 -> 0x0F8, 264 lines per frame (60.61 Hz) per MAME
+# konami/pooyan.cpp set_raw(18.432 MHz / 3, 384, 0, 256, 264, 16, 240); the core had
+# 263 lines. Applies after pooyan_single_domain.patch.
+--- a/vhdl_pooyan_rev_0_2_2020_04_26/rtl_dar/pooyan.vhd
++++ b/vhdl_pooyan_rev_0_2_2020_04_26/rtl_dar/pooyan.vhd
+@@ -294,7 +294,7 @@
+           if hcnt = "101111" then -- char from #0 to #47 (one line)
+             if vcnt = '1'&X"FF" then -- 511
+               --						vcnt <= '0'&X"FC";    -- 252
+-              vcnt <= '0'&X"F9";    -- 249
++              vcnt <= '0'&X"F8";    -- 248: 264 lines (60.61 Hz) per MAME konami/pooyan.cpp
+             else
+               vcnt <= vcnt + '1';
+             end if;

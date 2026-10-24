@@ -1,44 +1,28 @@
 #!/bin/bash
-# Converted from make_pooyan_proms.bat 11/2024 Red~Bote (Glenn Neidermeier)
+# Port of make_pooyan_proms.bat for the Basys3 build. Run from this
+# directory (the unzipped pooyan.zip) by contrib/tools/roms.sh, which sets:
+#   MAKE_VHDL_PROM  path of the compiled make_vhdl_prom
+#   PROM_DIR        output directory for the PROM VHDL
+# make_vhdl_prom names the entity after its output argument, so it runs inside
+# PROM_DIR with bare output file names.
 
-#copy /B 1.4a + 2.5a + 3.6a + 4.7a pooyan_prog.bin
-#copy /B xx.7a + xx.8a pooyan_sound.bin
-#
-#make_vhdl_prom pooyan_prog.bin pooyan_prog.vhd
-#
-#make_vhdl_prom 6.9a pooyan_sprite_grphx1.vhd
-#make_vhdl_prom 5.8a pooyan_sprite_grphx2.vhd
-#
-#make_vhdl_prom 8.10g pooyan_char_grphx1.vhd
-#make_vhdl_prom 7.9g  pooyan_char_grphx2.vhd
-#
-#make_vhdl_prom pooyan_sound.bin pooyan_sound_prog.vhd
-#
-#make_vhdl_prom pooyan.pr1  pooyan_palette.vhd
-#make_vhdl_prom pooyan.pr3  pooyan_char_color_lut.vhd
-#make_vhdl_prom pooyan.pr2  pooyan_sprite_color_lut.vhd
-#
-#del pooyan_prog.bin
-#del pooyan_sound.bin
+set -euo pipefail
 
+: "${MAKE_VHDL_PROM:?}" "${PROM_DIR:?}"
+roms="$(pwd)"
+tmp="$(mktemp -d)"
+trap 'rm -rf "$tmp"' EXIT
 
-cat 1.4a 2.5a 3.6a 4.7a > pooyan_prog.bin
-cat xx.7a xx.8a > pooyan_sound.bin
+cat 1.4a 2.5a 3.6a 4.7a > "$tmp/pooyan_prog.bin"
+cat xx.7a xx.8a > "$tmp/pooyan_sound.bin"
 
-./make_vhdl_prom pooyan_prog.bin pooyan_prog.vhd
-
-./make_vhdl_prom 6.9a pooyan_sprite_grphx1.vhd
-./make_vhdl_prom 5.8a pooyan_sprite_grphx2.vhd
-
-./make_vhdl_prom 8.10g pooyan_char_grphx1.vhd
-./make_vhdl_prom 7.9g  pooyan_char_grphx2.vhd
-
-./make_vhdl_prom pooyan_sound.bin pooyan_sound_prog.vhd
-
-./make_vhdl_prom pooyan.pr1  pooyan_palette.vhd
-./make_vhdl_prom pooyan.pr3  pooyan_char_color_lut.vhd
-./make_vhdl_prom pooyan.pr2  pooyan_sprite_color_lut.vhd
-
-rm pooyan_prog.bin
-rm pooyan_sound.bin
-
+cd "$PROM_DIR"
+"$MAKE_VHDL_PROM" "$tmp/pooyan_prog.bin"  pooyan_prog.vhd
+"$MAKE_VHDL_PROM" "$roms/6.9a"            pooyan_sprite_grphx1.vhd
+"$MAKE_VHDL_PROM" "$roms/5.8a"            pooyan_sprite_grphx2.vhd
+"$MAKE_VHDL_PROM" "$roms/8.10g"           pooyan_char_grphx1.vhd
+"$MAKE_VHDL_PROM" "$roms/7.9g"            pooyan_char_grphx2.vhd
+"$MAKE_VHDL_PROM" "$tmp/pooyan_sound.bin" pooyan_sound_prog.vhd
+"$MAKE_VHDL_PROM" "$roms/pooyan.pr1"      pooyan_palette.vhd
+"$MAKE_VHDL_PROM" "$roms/pooyan.pr3"      pooyan_char_color_lut.vhd
+"$MAKE_VHDL_PROM" "$roms/pooyan.pr2"      pooyan_sprite_color_lut.vhd
